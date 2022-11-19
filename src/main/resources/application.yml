@@ -1,0 +1,5 @@
+# Required connection configs for Kafka producer, consumer, and admin
+spring.kafka.properties.sasl.mechanism=PLAIN
+spring.kafka.properties.bootstrap.servers=pkc-xmzwx.europe-central2.gcp.confluent.cloud:9092
+spring.kafka.properties.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='SBWG6DA76KB42G2J' password='j8a/J4fvmOZcxwCZ70t6J8ScAS83UDrPh0njWeFXmyvKh7JmMs83X/l+8pO5Sbed';
+spring.kafka.properties.security.protocol=SASL_SSL
