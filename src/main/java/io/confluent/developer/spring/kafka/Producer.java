@@ -1,7 +1,9 @@
 package io.confluent.developer.spring.kafka;
 
 import com.github.javafaker.Faker;
+import io.confluent.developer.avro.Hobbit;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,7 +19,7 @@ import java.util.stream.Stream;
 @Component
 public class Producer {
 
-    private final KafkaTemplate<Integer, String> kafkaTemplate;
+    private final KafkaTemplate<Integer, Hobbit> kafkaTemplate;
 
     Faker faker;
 
@@ -27,7 +29,7 @@ public class Producer {
         final Flux<Long> interval = Flux.interval(Duration.ofMillis(1000));
         final Flux<String> quotes = Flux.fromStream(Stream.generate(() -> faker.hobbit().quote()));
         Flux.zip(interval, quotes)
-                .map((Function<Tuple2<Long, String>, Object>) it -> kafkaTemplate.send("hobbit", faker.random().nextInt(42), it.getT2()))
+                .map((Function<Tuple2<Long, String>, Object>) it -> kafkaTemplate.send(new ProducerRecord<>("hobbit-avro", faker.random().nextInt(42), new Hobbit(it.getT2()))))
                 .blockLast();
     }
 
